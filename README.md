@@ -1,0 +1,2 @@
+# xmllint-vscode
+Lint extension
