@@ -7,18 +7,18 @@ import * as an from './runner';
 import {Lint} from './lint';
 import {ConfigManager} from './configuration';
 
-let diagnosticCollection: vscode.DiagnosticCollection = vscode.languages.createDiagnosticCollection('javalint');
+let diagnosticCollection: vscode.DiagnosticCollection = vscode.languages.createDiagnosticCollection('xmllint');
 let outputChannel: vscode.OutputChannel;
 let timer: NodeJS.Timer;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-    outputChannel = vscode.window.createOutputChannel('JavaLint');
-    // outputChannel.appendLine('JavaLint is running.');
+    outputChannel = vscode.window.createOutputChannel('xmllint');
+    // outputChannel.appendLine('xmllint is running.');
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "javalint" is now active!');
+    console.log('Congratulations, your extension "xmllint" is now active!');
 
     loadConfigure();
 
@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
 
-    let single = vscode.commands.registerCommand('javalint.runAnalysis', runAnalysis);
+    let single = vscode.commands.registerCommand('xmllint.runAnalysis', runAnalysis);
     context.subscriptions.push(single);
 
     vscode.workspace.onDidChangeConfiguration((()=>loadConfigure()).bind(this));
@@ -40,13 +40,13 @@ function runAnalysis(): Promise<void> {
     outputChannel.show();
     outputChannel.clear();
 
-    let start = 'JavaLint started: ' + new Date().toString();
+    let start = 'xmllint started: ' + new Date().toString();
     outputChannel.appendLine(start);
 
-    let result = an.runOnFile();
+    let result = an.runXmlLint();
     outputChannel.appendLine(result);
 
-    let end = 'JavaLint ended: ' + new Date().toString();
+    let end = 'xmllint ended: ' + new Date().toString();
     outputChannel.appendLine(end);
 
     // vscode.window.showInformationMessage(edit.document.uri.fsPath)
@@ -57,7 +57,7 @@ function runAnalysis(): Promise<void> {
 // this method is called when your extension is deactivated
 export function deactivate() {
     clearTimeout(timer)
-    vscode.window.showInformationMessage("Javalint deactivated")
+    vscode.window.showInformationMessage("xmllint deactivated")
 }
 
 function doLint() {

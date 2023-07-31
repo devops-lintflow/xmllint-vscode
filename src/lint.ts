@@ -1,16 +1,16 @@
 /**
  * LINTER.TS
  * ---------
- * Parses javalint output and adds linting hints to files.
+ * Parses xmllint output and adds linting hints to files.
  */
 
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { runOnFile } from './runner';
+import { runXmlLint } from './runner';
 
 // let outputChannel: vscode.OutputChannel;
-// outputChannel = vscode.window.createOutputChannel('JavaLint');
+// outputChannel = vscode.window.createOutputChannel('xmllint');
 
 function getCorrectFileName(p: string): string {
     if (!fs.existsSync(p)) {
@@ -23,7 +23,7 @@ function getCorrectFileName(p: string): string {
     return p;
 }
 
-function javalintSeverityToDiagnosticSeverity(severity: string): vscode.DiagnosticSeverity {
+function xmllintSeverityToDiagnosticSeverity(severity: string): vscode.DiagnosticSeverity {
     switch (severity) {
         case 'Error':
             return vscode.DiagnosticSeverity.Error;
@@ -72,9 +72,9 @@ export function analysisResult(diagnosticCollection: vscode.DiagnosticCollection
 
                 let l = doc.lineAt(line);
                 let r = new vscode.Range(line, 0, line, l.text.length);
-                let d = new vscode.Diagnostic(r, `${message}`, javalintSeverityToDiagnosticSeverity(severity));
+                let d = new vscode.Diagnostic(r, `${message}`, xmllintSeverityToDiagnosticSeverity(severity));
 
-                d.source = 'javalint';
+                d.source = 'xmllint';
                 diagnostics.push(d);
             }
 
@@ -84,8 +84,8 @@ export function analysisResult(diagnosticCollection: vscode.DiagnosticCollection
 }
 
 export function Lint(diagnosticCollection: vscode.DiagnosticCollection) {
-    let javalintOutput;
+    let xmllintOutput;
 
-    javalintOutput = runOnFile();
-    analysisResult(diagnosticCollection, javalintOutput)
+    xmllintOutput = runXmlLint();
+    analysisResult(diagnosticCollection, xmllintOutput)
 }

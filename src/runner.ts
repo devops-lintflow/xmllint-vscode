@@ -1,36 +1,39 @@
 import {spawnSync} from "child_process";
+import {XMLParser} from "fast-xml-parser";
 import * as vscode from 'vscode';
 import {ConfigManager} from "./configuration";
 
-export function runOnFile() {
+export function runXmlLint() {
     if (vscode.window.activeTextEditor == undefined) {
         return  ""
     }
 
     let activedoc = vscode.window.activeTextEditor.document;
-    let filename = activedoc.fileName;
+    let filetext = activedoc.getText();
 
     if (ConfigManager.getInstance().isSupportLanguage(activedoc.languageId)) {
-        return runJavaLint(filename);
+        return runHelper(filetext);
     } else {
         return "";
     }
 }
 
-export function runJavaLint(filename: string) {
-    let config = ConfigManager.getInstance().getConfig();
-    let param: string[] = ["-jar"];
+function runHelper(filetext: string) {
+    const options = {
+        ignoreAttributes : false
+    };
 
-    param.push(config["javalintPath"]);
-    param.push("--file");
-    param.push(filename);
+    const parser = new XMLParser(options);
+    let buf = parser.parse(filetext);
 
-    let output = lint("java", param);
+    let result = checkIntent(buf)
 
-    return output.join('\n');
+    return result.join('\n');
 }
 
-function lint(exec: string, params: string[]) {
-    let result = spawnSync(exec, params);
-    return [result.stdout, result.stderr];
+function checkIntent(data: any) {
+    // <action android:name="android.intent.action.MAIN" />
+    // TODO
+
+    return []
 }
