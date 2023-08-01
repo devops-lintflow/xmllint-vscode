@@ -33,7 +33,7 @@ export class ConfigManager {
 
     public initialize() {
         this.config = {};
-        let settings = vscode.workspace.getConfiguration('javalint');
+        let settings = vscode.workspace.getConfiguration('xmllint');
 
         if (settings) {
             this.config["languages"] = settings.get("languages", []);

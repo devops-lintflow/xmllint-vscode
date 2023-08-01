@@ -44,7 +44,7 @@ function runAnalysis(): Promise<void> {
     outputChannel.appendLine(start);
 
     let result = an.runXmlLint();
-    outputChannel.appendLine(result);
+    outputChannel.appendLine(result.join('\n'));
 
     let end = 'xmllint ended: ' + new Date().toString();
     outputChannel.appendLine(end);

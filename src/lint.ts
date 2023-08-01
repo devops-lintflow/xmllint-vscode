@@ -34,15 +34,16 @@ function xmllintSeverityToDiagnosticSeverity(severity: string): vscode.Diagnosti
     }
 }
 
-export function analysisResult(diagnosticCollection: vscode.DiagnosticCollection, result: string) {
+export function analysisResult(diagnosticCollection: vscode.DiagnosticCollection, result: string[]) {
     diagnosticCollection.clear();
 
     // 1 = path, 2 = line, 3 = severity, 4 = message
-    let regex = /^(.*):([0-9]+):(\w+):(.*\s+.*)\n/gm;
+    let regex = /^(.*):([0-9]+):(\w+):(.*)$/m;
     let regexArray: RegExpExecArray;
     let fileData: { [key: string]: RegExpExecArray[] } = {};
 
-    while (regexArray = regex.exec(result)) {
+    for (let item of result) {
+        regexArray = regex.exec(item);
         if (regexArray[1] === undefined || regexArray[2] === undefined
             || regexArray[3] === undefined || regexArray[4] === undefined) {
             continue;

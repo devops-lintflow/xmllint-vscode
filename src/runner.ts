@@ -1,39 +1,41 @@
-import {spawnSync} from "child_process";
-import {XMLParser} from "fast-xml-parser";
+import {XMLParser, XMLValidator} from "fast-xml-parser";
 import * as vscode from 'vscode';
 import {ConfigManager} from "./configuration";
 
 export function runXmlLint() {
     if (vscode.window.activeTextEditor == undefined) {
-        return  ""
+        return [];
     }
 
     let activedoc = vscode.window.activeTextEditor.document;
+    let filename = activedoc.fileName;
     let filetext = activedoc.getText();
 
     if (ConfigManager.getInstance().isSupportLanguage(activedoc.languageId)) {
-        return runHelper(filetext);
+        return runHelper(filename, filetext);
     } else {
-        return "";
+        return [];
     }
 }
 
-function runHelper(filetext: string) {
-    const options = {
-        ignoreAttributes : false
-    };
+function runHelper(filename: string, filetext: string) {
+    const buf = XMLValidator.validate(filetext, {
+        allowBooleanAttributes: true
+    });
 
-    const parser = new XMLParser(options);
-    let buf = parser.parse(filetext);
+    let result = [];
 
-    let result = checkIntent(buf)
+    result.push(checkIntent(filename, buf));
 
-    return result.join('\n');
+    if (buf !== true) {
+        result.push(`${filename}:${buf['err']['line']}:Error:${buf['err']['msg']}`);
+    }
+
+    return result;
 }
 
-function checkIntent(data: any) {
-    // <action android:name="android.intent.action.MAIN" />
-    // TODO
+function checkIntent(xmlname: string, xmldata: any) {
+    let msg = 'The name of a custom intent can NOT begin with android.intent.action'
 
-    return []
+    return `${xmlname}:1:Warn:${msg}`;
 }
