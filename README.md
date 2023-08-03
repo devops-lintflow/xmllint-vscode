@@ -36,5 +36,5 @@ Project License can be found [here](LICENSE).
 ## Reference
 
 - [android-manifest](https://developer.android.com/guide/topics/manifest/manifest-intro#example)
-- [fast-xml-parser]( https://github.com/NaturalIntelligence/fast-xml-parser)
+- [fast-xml-parser](https://github.com/NaturalIntelligence/fast-xml-parser)
 - [publishing-extension](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
